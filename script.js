@@ -6,36 +6,18 @@ const fortuneSlip = document.getElementById("fortuneSlip");
 const fortuneLevel = document.getElementById("fortuneLevel");
 const fortuneMessage = document.getElementById("fortuneMessage");
 
-const fortunes = [
-  {
-    level: "大吉",
-    message: "Today is a good day to trust yourself. The answer may come sooner than you think."
-  },
-  {
-    level: "大吉",
-    message: "A bright path is opening. Move forward with confidence."
-  },
-  {
-    level: "中吉",
-    message: "Things are not fully clear yet, but you are moving in the right direction."
-  },
-  {
-    level: "中吉",
-    message: "Be patient. A small choice today may matter more than you expect."
-  },
-  {
-    level: "中吉",
-    message: "The result depends on how calmly you handle the next step."
-  },
-  {
-    level: "小吉",
-    message: "Go slowly. This is not a bad sign, but it asks you to be careful."
-  },
-  {
-    level: "小吉",
-    message: "Do not rush the answer. Some things need more time."
-  }
-];
+let fortunes = [];
+
+// Load JSON data
+fetch("fortunes.json")
+  .then(response => response.json())
+  .then(data => {
+    fortunes = data;
+    console.log("Fortunes loaded!");
+  })
+  .catch(error => {
+    console.error("Error loading fortunes:", error);
+  });
 
 drawButton.addEventListener("click", function () {
   const question = questionInput.value;
@@ -47,23 +29,31 @@ drawButton.addEventListener("click", function () {
 
   savedQuestion.textContent = "Your question: " + question;
 
+  // Reset display
   fortuneSlip.classList.add("hidden");
+
   jar.classList.remove("hidden");
   jar.classList.add("shake");
 
   drawButton.disabled = true;
 
+  // Shake animation time
   setTimeout(function () {
+
     jar.classList.remove("shake");
     jar.classList.add("hidden");
 
+    // Random fortune
     const randomIndex = Math.floor(Math.random() * fortunes.length);
     const selectedFortune = fortunes[randomIndex];
 
+    // Show fortune
     fortuneLevel.textContent = selectedFortune.level;
     fortuneMessage.textContent = selectedFortune.message;
 
     fortuneSlip.classList.remove("hidden");
+
     drawButton.disabled = false;
+
   }, 1500);
 });
